@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Domain.Projects;
 using TaskManagement.Domain.Shared.Aggregates;
+using TaskManagement.Domain.Tasks;
 using TaskManagement.Domain.Users;
 
 namespace TaskManagement.DataAccess;
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Project> Projects => Set<Project>();
+    public DbSet<TaskItem> Tasks => Set<TaskItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

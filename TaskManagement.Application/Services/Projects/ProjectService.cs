@@ -1,4 +1,5 @@
 using TaskManagement.Application.Services.Projects.DTOs;
+using TaskManagement.Application.Services.Tasks.DTOs;
 using TaskManagement.Domain.Projects;
 using TaskManagement.Domain.Shared.Exceptions;
 using TaskManagement.Domain.Shared.Pagination;
@@ -64,6 +65,20 @@ public class ProjectService : IProjectService
 
         await _uow.Projects.DeleteAsync(project, ct);
         await _uow.SaveChangesAsync(ct);
+    }
+
+    public async Task<PaginatedResult<TaskDto>> GetProjectTasksAsync(int projectId, PaginationParams pagination, CancellationToken ct = default)
+    {
+        _ = await _uow.Projects.GetByIdAsync(projectId, ct)
+            ?? throw new NotFoundException(nameof(Project), projectId);
+
+        var result = await _uow.Projects.GetProjectTasksAsync(projectId, pagination, ct);
+        var dtos = result.Items.Select(t => new TaskDto(
+            t.Id, t.Title, t.Description,
+            t.Status.ToString(), t.Priority.ToString(),
+            t.DueDate, t.ProjectId, t.CreatedOn)).ToList();
+
+        return new PaginatedResult<TaskDto>(dtos, result.TotalCount, result.PageNumber, result.PageSize);
     }
 
     private static ProjectDto MapToDto(Project p) =>

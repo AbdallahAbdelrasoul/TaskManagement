@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskManagement.Application.Services.Auth;
 using TaskManagement.Application.Services.Auth.Validators;
 using TaskManagement.Application.Services.Projects;
+using TaskManagement.Application.Services.Tasks;
 using TaskManagement.Application.Services.Users;
 using TaskManagement.Domain.Shared.Validation;
 
@@ -15,6 +16,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<ITaskService, TaskService>();
         services.AddScoped<IValidationEngine, ValidationEngine>();
 
         services.AddValidatorsFromAssemblyContaining<UserRegisterDtoValidator>();

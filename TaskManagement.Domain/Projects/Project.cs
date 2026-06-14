@@ -1,4 +1,5 @@
 using TaskManagement.Domain.Shared.Aggregates;
+using TaskManagement.Domain.Tasks;
 using TaskManagement.Domain.Users;
 
 namespace TaskManagement.Domain.Projects;
@@ -12,4 +13,5 @@ public class Project : BaseDomain, IEntity<int>
     public int OwnerId { get; set; }
 
     public User Owner { get; set; } = default!;
+    public ICollection<TaskItem> Tasks { get; set; } = [];
 }

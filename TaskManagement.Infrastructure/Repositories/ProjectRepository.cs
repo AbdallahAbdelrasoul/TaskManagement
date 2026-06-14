@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagement.DataAccess;
 using TaskManagement.Domain.Projects;
 using TaskManagement.Domain.Shared.Pagination;
+using TaskManagement.Domain.Tasks;
 using TaskManagement.Domain.Shared.Repositories;
 
 namespace TaskManagement.Infrastructure.Repositories;
@@ -28,6 +29,19 @@ public class ProjectRepository : IProjectRepository
             .ToListAsync(ct);
 
         return new PaginatedResult<Project>(items, total, pagination.PageNumber, pagination.PageSize);
+    }
+
+    public async Task<PaginatedResult<TaskItem>> GetProjectTasksAsync(int projectId, PaginationParams pagination, CancellationToken ct = default)
+    {
+        var query = _context.Tasks.AsNoTracking().Where(t => t.ProjectId == projectId);
+        var total = await query.CountAsync(ct);
+        var items = await query
+            .OrderBy(t => t.Id)
+            .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync(ct);
+
+        return new PaginatedResult<TaskItem>(items, total, pagination.PageNumber, pagination.PageSize);
     }
 
     public async Task<Project> AddAsync(Project project, CancellationToken ct = default)

@@ -9,12 +9,14 @@ public class UnitOfWork : IUnitOfWork
 
     public IUserRepository Users { get; }
     public IProjectRepository Projects { get; }
+    public ITaskRepository Tasks { get; }
 
-    public UnitOfWork(AppDbContext context, IUserRepository users, IProjectRepository projects)
+    public UnitOfWork(AppDbContext context, IUserRepository users, IProjectRepository projects, ITaskRepository tasks)
     {
         _context = context;
         Users = users;
         Projects = projects;
+        Tasks = tasks;
     }
 
     public Task<int> SaveChangesAsync(CancellationToken ct = default) =>

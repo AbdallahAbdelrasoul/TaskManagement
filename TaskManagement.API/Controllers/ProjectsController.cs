@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Services.Projects;
 using TaskManagement.Application.Services.Projects.DTOs;
+using TaskManagement.Application.Services.Tasks.DTOs;
 using TaskManagement.Domain.Shared.Models;
 using TaskManagement.Domain.Shared.Pagination;
 
@@ -61,5 +62,14 @@ public class ProjectsController : ControllerBase
     {
         await _projectService.DeleteAsync(id, ct);
         return Ok(ApiResponse<object>.Ok(null!, "Project deleted successfully."));
+    }
+
+    [HttpGet("{id:int}/tasks")]
+    [ProducesResponseType(typeof(ApiResponse<PaginatedResult<TaskDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetTasks(int id, [FromQuery] PaginationParams pagination, CancellationToken ct)
+    {
+        var result = await _projectService.GetProjectTasksAsync(id, pagination, ct);
+        return Ok(ApiResponse<PaginatedResult<TaskDto>>.Ok(result));
     }
 }

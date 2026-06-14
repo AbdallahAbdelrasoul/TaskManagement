@@ -24,8 +24,8 @@ TaskManagement.Application      ← Business logic: services, DTOs, validators
     ↓
 TaskManagement.Domain           ← Core: entities, interfaces, exceptions, shared models
     ↓
-TaskManagement.DataAccess       ← Persistence: EF Core DbContext, repositories, UnitOfWork
-TaskManagement.Infrastructure   ← Cross-cutting: JWT token service, password hashing
+TaskManagement.DataAccess       ← Persistence: EF Core DbContext, UnitOfWork
+TaskManagement.Infrastructure   ← Cross-cutting: repositories, JWT token service, password hashing
 ```
 
 **Key patterns used:**

@@ -5,6 +5,7 @@ using TaskManagement.Application.Services.Auth.Validators;
 using TaskManagement.Application.Services.Projects;
 using TaskManagement.Application.Services.Tasks;
 using TaskManagement.Application.Services.Users;
+using TaskManagement.Application.Services.Context;
 using TaskManagement.Domain.Shared.Validation;
 
 namespace TaskManagement.Application.Extensions;
@@ -17,6 +18,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IActiveUserContext, ActiveUserContext>();
         services.AddScoped<IValidationEngine, ValidationEngine>();
 
         services.AddValidatorsFromAssemblyContaining<UserRegisterDtoValidator>();

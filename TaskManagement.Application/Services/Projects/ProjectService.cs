@@ -1,3 +1,4 @@
+using TaskManagement.Application.Services.Context;
 using TaskManagement.Application.Services.Projects.DTOs;
 using TaskManagement.Application.Services.Tasks.DTOs;
 using TaskManagement.Domain.Projects;
@@ -10,8 +11,13 @@ namespace TaskManagement.Application.Services.Projects;
 public class ProjectService : IProjectService
 {
     private readonly IUnitOfWork _uow;
+    private readonly IActiveUserContext _userContext;
 
-    public ProjectService(IUnitOfWork uow) => _uow = uow;
+    public ProjectService(IUnitOfWork uow, IActiveUserContext userContext)
+    {
+        _uow = uow;
+        _userContext = userContext;
+    }
 
     public async Task<PaginatedResult<ProjectDto>> GetAllAsync(PaginationParams pagination, CancellationToken ct = default)
     {
@@ -35,7 +41,8 @@ public class ProjectService : IProjectService
             Name = request.Name,
             Description = request.Description,
             OwnerId = ownerId,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = _userContext.UserId
         };
 
         await _uow.Projects.AddAsync(project, ct);
@@ -51,6 +58,7 @@ public class ProjectService : IProjectService
 
         project.Name = request.Name;
         project.Description = request.Description;
+        project.ModifiedBy = _userContext.UserId;
 
         await _uow.Projects.UpdateAsync(project, ct);
         await _uow.SaveChangesAsync(ct);

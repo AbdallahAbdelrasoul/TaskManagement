@@ -1,3 +1,4 @@
+using TaskManagement.Application.Services.Context;
 using TaskManagement.Application.Services.Users.DTOs;
 using TaskManagement.Domain.Shared.Exceptions;
 using TaskManagement.Domain.Shared.Pagination;
@@ -9,8 +10,13 @@ namespace TaskManagement.Application.Services.Users;
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _uow;
+    private readonly IActiveUserContext _userContext;
 
-    public UserService(IUnitOfWork uow) => _uow = uow;
+    public UserService(IUnitOfWork uow, IActiveUserContext userContext)
+    {
+        _uow = uow;
+        _userContext = userContext;
+    }
 
     public async Task<PaginatedResult<UserDto>> GetAllAsync(PaginationParams pagination, CancellationToken ct = default)
     {
@@ -34,6 +40,7 @@ public class UserService : IUserService
 
         user.Username = request.Username;
         user.Email = request.Email;
+        user.ModifiedBy = _userContext.UserId;
 
         await _uow.Users.UpdateAsync(user, ct);
         await _uow.SaveChangesAsync(ct);

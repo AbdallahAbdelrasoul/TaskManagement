@@ -1,3 +1,4 @@
+using TaskManagement.Application.Services.Context;
 using TaskManagement.Application.Services.Tasks.DTOs;
 using TaskManagement.Domain.Shared.Exceptions;
 using TaskManagement.Domain.Shared.Pagination;
@@ -10,8 +11,13 @@ namespace TaskManagement.Application.Services.Tasks;
 public class TaskService : ITaskService
 {
     private readonly IUnitOfWork _uow;
+    private readonly IActiveUserContext _userContext;
 
-    public TaskService(IUnitOfWork uow) => _uow = uow;
+    public TaskService(IUnitOfWork uow, IActiveUserContext userContext)
+    {
+        _uow = uow;
+        _userContext = userContext;
+    }
 
     public async Task<PaginatedResult<TaskDto>> GetAllAsync(PaginationParams pagination, int? projectId, string? status, CancellationToken ct = default)
     {
@@ -43,7 +49,8 @@ public class TaskService : ITaskService
             Priority = priority,
             DueDate = request.DueDate,
             ProjectId = request.ProjectId,
-            Status = TaskStatus.Todo
+            Status = TaskStatus.Todo,
+            CreatedBy = _userContext.UserId
         };
 
         await _uow.Tasks.AddAsync(task, ct);
@@ -62,6 +69,7 @@ public class TaskService : ITaskService
         task.Status = Enum.Parse<TaskStatus>(request.Status, true);
         task.Priority = Enum.Parse<TaskPriority>(request.Priority, true);
         task.DueDate = request.DueDate;
+        task.ModifiedBy = _userContext.UserId;
 
         await _uow.Tasks.UpdateAsync(task, ct);
         await _uow.SaveChangesAsync(ct);

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Domain.Projects;
 using TaskManagement.Domain.Shared.Aggregates;
 using TaskManagement.Domain.Users;
 
@@ -9,6 +10,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Project> Projects => Set<Project>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

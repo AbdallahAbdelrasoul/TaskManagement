@@ -1,3 +1,4 @@
+using TaskManagement.Domain.Projects;
 using TaskManagement.Domain.Shared.Aggregates;
 
 namespace TaskManagement.Domain.Users;
@@ -9,4 +10,6 @@ public class User : BaseDomain, IEntity<int>
     public string Email { get; set; } = default!;
     public string PasswordHash { get; set; } = default!;
     public UserRole Role { get; set; } = UserRole.User;
+
+    public ICollection<Project> OwnedProjects { get; set; } = [];
 }

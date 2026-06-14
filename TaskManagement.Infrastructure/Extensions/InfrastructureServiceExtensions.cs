@@ -16,6 +16,7 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<IPasswordHashingService, PasswordHashingService>();
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
